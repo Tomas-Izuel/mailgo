@@ -11,3 +11,13 @@ func getAllRelatedNotificationsService(relatedId string, ctx context.Context) ([
 
 	return related, nil
 }
+
+func CreateNotification(createDto CreateNotificationDto) error {
+	notification := Notification{
+		Type:         createDto.Type,
+		RelatedId:    createDto.RelatedId,
+		EventDetails: createDto.EventDetails,
+	}
+
+	return nil
+}

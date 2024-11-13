@@ -12,6 +12,12 @@ type Notification struct {
 	EventDetails map[string]interface{} `json:"eventDetails" bson:"eventDetails"` // Datos adicionales según el tipo de evento
 }
 
+type CreateNotificationDto struct {
+	Type         string                 `json:"type" bson:"type"`
+	RelatedId    string                 `json:"relatedId" bson:"relatedId"`
+	EventDetails map[string]interface{} `json:"eventDetails" bson:"eventDetails"`
+}
+
 type NotificationHandler interface {
 	Process() error
 }

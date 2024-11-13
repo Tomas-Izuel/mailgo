@@ -1,8 +1,10 @@
 package consume
 
 import (
+	"encoding/json"
 	"mailgo/lib"
 	"mailgo/lib/log"
+	"mailgo/modules/notification"
 
 	"github.com/streadway/amqp"
 )
@@ -60,7 +62,8 @@ func ConsumeNegativeFeedback() error {
 		"",                  // routing key
 		"negative_feedback", // exchange
 		false,
-		nil)
+		nil,
+	)
 	if err != nil {
 		logger.Error(err)
 		return err
@@ -82,10 +85,36 @@ func ConsumeNegativeFeedback() error {
 
 	go func() {
 		for msg := range mgs {
-			logger.Info("Received message: ", string(msg.Body))
-			msg.Ack(false)
+			var feedbackMsg notification.FeedbackNotificationMessage
+			if err := json.Unmarshal(msg.Body, &feedbackMsg); err != nil {
+				logger.Error("Failed to parse message: ", err)
+				msg.Nack(false, false)
+				continue
+			}
+
+			logger.Info("Received negative feedback from user: ", feedbackMsg.UserId)
+
+			if err := processNegativeFeedback(feedbackMsg); err != nil {
+				logger.Error("Failed to process negative feedback: ", err)
+				msg.Nack(false, false)
+			} else {
+				msg.Ack(false)
+			}
 		}
 	}()
 
+	return nil
+}
+
+func processNegativeFeedback(feedbackMsg notification.FeedbackNotificationMessage) error {
+	var createFeedbackDto notification.CreateNotificationDto = notification.CreateNotificationDto{
+		Type:         "feedback",
+		RelatedId:    feedbackMsg.ArticleId,
+		EventDetails: map[string]interface{}{},
+	}
+
+	if err := notification.CreateNotification(createFeedbackDto); err != nil {
+		return err
+	}
 	return nil
 }
