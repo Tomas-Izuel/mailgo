@@ -17,24 +17,46 @@ presentación de los mensajes, se utilizá tipos de eventos, administrables
 por un administrador, los cuales contienen un template de mail personalizado 
 para cada caso.
 
+## Tecnologías
+- Golang
+- MongoDB
+- RabbitMQ
+
 ## Casos de Uso
 
 ### Crear tipo de notificación
 
-- El administrador crea un tipo de notificación con un nombre y un template de mail.
+- Solo los usuarios con permiso de "admin" pueden crear un tipo de notificación.
+- Se pueden asignar tantas notificaciones como se desee.
+- Se valida que el template de mail exista.
+
+### Modificar tipo de notificación
+
+- Solo los usuarios con permiso de "admin" pueden modificar un tipo de notificación.
+- Se pueden modificar los campos de nombre, template de mail y notificaciones.
+
+### Eliminar tipo de notificación
+
+- Solo los usuarios con permiso de "admin" pueden eliminar un tipo de notificación.
+
+### Obtener tipo de notificación
+
+- El administrador obtiene un tipo de notificación.
+
+### Obtener todos los tipos de notificación
+
+- El administrador obtiene todos los tipos de notificación.
 
 ### Crear un template de mail
 
-- El administrador crea un template de mail con un nombre y un contenido HTML.
+- Solo los usuarios con permiso de "admin" pueden crear un template de mail.
+- Se debe ingresar un asunto y un cuerpo de mail.
 
 ### Enviar notificación
 
-- El servicio recibe un evento y un usuario.
-- El servicio valida la información del usuario y obtiene el mail del 
-  servicio de autenticación.
-- El servicio busca el tipo de notificación asociado al evento.
-- El servicio busca el template de mail asociado al tipo de notificación.
-- El servicio envía el mail al usuario con el contenido del template.
+- Se envía una notificación a un usuario.
+- Se obtiene el template de mail correspondiente al tipo de notificación.
+- Se reemplazan las variables del template por los valores correspondientes.
 
 ## Modelo de datos
 
@@ -45,6 +67,7 @@ para cada caso.
 ID: ObjectId
 Name: string
 TemplateId: ObjectId
+EventKeys: []string
 ```
 
 ### Template de mail
@@ -53,7 +76,6 @@ TemplateId: ObjectId
 ID: ObjectId
 Subject: string
 BodyHTML: string
-BodyText: string
 ```
 
 ### Notificación
@@ -65,6 +87,11 @@ Recipient: string
 RelatedId: string
 CreatedAt: time.Time
 Details: map[string]interface{}
+Mail: {
+    Subject: string
+    BodyHTML: string
+    BodyText: string
+}
 ```
 
 ## Interfaz REST
@@ -84,7 +111,8 @@ Details: map[string]interface{}
 ```json
 {
     "name": "string",
-    "templateId": "string"
+    "templateId": "string",
+    "notifications": ["string"]
 }
 ```
 
@@ -111,7 +139,8 @@ Details: map[string]interface{}
   {
     "id": "string",
     "name": "string",
-    "templateId": "string"
+    "templateId": "string",
+    "notifications": ["string"]
   }
 ]
 ```
@@ -134,7 +163,8 @@ Details: map[string]interface{}
 {
   "id": "string",
   "name": "string",
-  "templateId": "string"
+  "templateId": "string",
+  "notifications": ["string"]
 }
 ```
 
@@ -154,7 +184,8 @@ Details: map[string]interface{}
 ```json
 {
     "name": "string",
-    "templateId": "string"
+    "templateId": "string",
+    "notifications": ["string"]
 }
 ```
 
@@ -221,9 +252,20 @@ Details: map[string]interface{}
 
 ### Eventos
 
-- **Feedback negativo** - `negative-feedback` - Se envía cuando un usuario 
-  deja un feedback negativo en la plataforma.
-- **Confirmación de compra** - `order-confirmation` - Se envía cuando un 
-  usuario realiza una compra en la plataforma.
-- **Carrito abandonado** - `abandoned-cart` - Se envía cuando un usuario 
-  abandona un carrito con productos en la plataforma.
+- **Exchange**: `notification`
+- **Tipo**: `direct`
+- **routingKey**: `send-notification`
+
+**Mensaje**
+
+```json
+{
+    "eventKey":  "string",
+    "relatedId": "string",
+    "details": [
+      {
+        "key": "value"
+      }
+    ]
+}
+```
