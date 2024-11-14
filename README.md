@@ -24,6 +24,18 @@ para cada caso.
 
 ## Casos de Uso
 
+### Consultar notificaciones
+
+- Se obtienen todas las notificaciones de un usuario.
+- No se necesita permisos especiales.
+- Un usuario solo puede ver sus notificaciones.
+
+### Consultar notificaciones una notificación
+
+- Se obtiene una notificación de un usuario.
+- No se necesita permisos especiales.
+- Un usuario solo puede ver sus notificaciones.
+
 ### Crear tipo de notificación
 
 - Solo los usuarios con permiso de "admin" pueden crear un tipo de notificación.
@@ -95,6 +107,70 @@ Mail: {
 ```
 
 ## Interfaz REST
+
+### Notificaciones
+
+*Consultar notificaciones* `GET /notification`
+
+**Headers**
+
+| Cabecera      | Contenido                         |
+| ------------- | --------------------------------- |
+| Authorization | Bearer xxx (Token en formato JWT) |
+
+**Response**:
+
+- **200 OK**
+```json
+[
+  {
+    "id": "string",
+    "typeId": "string",
+    "recipient": "string",
+    "relatedId": "string",
+    "createdAt": "string",
+    "mail": {
+      "subject": "string",
+      "bodyHTML": "string",
+      "bodyText": "string"
+    }
+  }
+]
+```
+
+- **401 UNAUTHORIZED** si el token es inválido
+- **500 INTERNAL SERVER ERROR** si hay un error en el servidor
+
+*Consultar una notificación* `GET /notification/{id}`
+
+**Headers**
+
+| Cabecera      | Contenido                         |
+| ------------- | --------------------------------- |
+| Authorization | Bearer xxx (Token en formato JWT) |
+
+**Response**:
+
+- **200 OK**
+```json
+{
+  "id": "string",
+  "typeId": "string",
+  "recipient": "string",
+  "relatedId": "string",
+  "createdAt": "string",
+  "mail": {
+    "subject": "string",
+    "bodyHTML": "string",
+    "bodyText": "string"
+  }
+}
+```
+
+- **401 UNAUTHORIZED** si el token es inválido
+- **500 INTERNAL SERVER ERROR** si hay un error en el servidor
+
+--- 
 
 ### Tipos de notificación
 
