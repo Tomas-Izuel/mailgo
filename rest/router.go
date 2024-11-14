@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"mailgo/modules/notification"
+	notificationtype "mailgo/modules/notification_type"
 )
 
 func initRouter() {
@@ -9,6 +9,12 @@ func initRouter() {
 		panic("Server non existent")
 	}
 
-	notificationGroup := server.Group("/notifications")
-	notificationGroup.GET("/:relatedId", notification.GetAllRelatedNotificationsController)
+	//Notification Types
+	notificationTypeGroup := server.Group("/notification-type")
+	notificationTypeGroup.POST("/", notificationtype.CreateNotificationTypeController)
+	notificationTypeGroup.GET("/:typeId", notificationtype.GetNotificationTypeByIDController)
+	notificationTypeGroup.PUT("/:typeId", notificationtype.UpdateNotificationTypeController)
+	notificationTypeGroup.DELETE("/:typeId", notificationtype.DeleteNotificationTypeController)
+
+	//Email Templates
 }
