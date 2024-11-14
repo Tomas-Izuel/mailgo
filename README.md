@@ -1,7 +1,6 @@
 # Arquitectura de microservicios
 ## Servicio de notificaciones mail
 
----
 ```
 Author: Izuel Tomas
 Legajo: 47700
@@ -9,8 +8,6 @@ Año: 2024
 ```
 
 ## Descripción
-
----
 
 El servicio de mensajeria por mail esta encargado de hacer llegar 
 notificaciones a los usuarios de la plataforma debido a diferentes eventos.
@@ -22,7 +19,6 @@ para cada caso.
 
 ## Casos de Uso
 
----
 ### Crear tipo de notificación
 
 - El administrador crea un tipo de notificación con un nombre y un template de mail.
@@ -42,9 +38,8 @@ para cada caso.
 
 ## Modelo de datos
 
----
 
-## Tipo de notificación
+### Tipo de notificación
 
 ```
 ID: ObjectId
@@ -52,7 +47,7 @@ Name: string
 TemplateId: ObjectId
 ```
 
-## Template de mail
+### Template de mail
 
 ```
 ID: ObjectId
@@ -61,7 +56,7 @@ BodyHTML: string
 BodyText: string
 ```
 
-## Notificación
+### Notificación
 
 ```
 ID: ObjectId
@@ -73,8 +68,6 @@ Details: map[string]interface{}
 ```
 
 ## Interfaz REST
-
----
 
 ### Tipos de notificación
 
@@ -185,6 +178,8 @@ Details: map[string]interface{}
 - **200 OK** si la notificación fue eliminada con éxito
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
+
+---
 
 ### Templates de mail
 
