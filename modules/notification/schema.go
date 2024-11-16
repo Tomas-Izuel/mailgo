@@ -1,22 +1,27 @@
 package notification
 
-import "time"
+import (
+	"time"
+)
 
 type Notification struct {
-	Id           string                 `json:"id" bson:"_id"`
+	ID           string                 `json:"id" bson:"_id"`
 	TypeId       string                 `json:"typeId" bson:"typeId"`
+	UserId       string                 `json:"userId" bson:"userId"`
 	Recipient    string                 `json:"recipient" bson:"recipient"`
 	RelatedId    string                 `json:"relatedId" bson:"relatedId"`
 	CreatedAt    time.Time              `json:"createdAt" bson:"createdAt"`
 	EventDetails map[string]interface{} `json:"eventDetails" bson:"eventDetails"` // Datos adicionales según el tipo de evento
+	Mail         struct {
+		Subject  string `json:"subject" bson:"subject"`
+		BodyHTML string `json:"bodyHtml" bson:"bodyHtml"`
+		BodyText string `json:"bodyText" bson:"bodyText"`
+	} `json:"mail"`
 }
 
 type CreateNotificationDto struct {
-	Type         string                 `json:"type" bson:"type"`
+	Event        string                 `json:"type" bson:"type"`
 	RelatedId    string                 `json:"relatedId" bson:"relatedId"`
+	UserId       string                 `json:"userId" bson:"userId"`
 	EventDetails map[string]interface{} `json:"eventDetails" bson:"eventDetails"`
-}
-
-type NotificationHandler interface {
-	Process() error
 }

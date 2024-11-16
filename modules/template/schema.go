@@ -7,6 +7,12 @@ type MailTemplate struct {
 	BodyText string `json:"bodyText" bson:"bodyText"` // Texto plano del correo
 }
 
+type MailNotificationTemplate struct {
+	Subject  string `json:"subject" bson:"subject"`
+	BodyHTML string `json:"bodyHtml" bson:"bodyHtml"`
+	BodyText string `json:"bodyText" bson:"bodyText"`
+}
+
 type CreateMailTemplateDto struct {
 	Subject  string `json:"subject" bson:"subject"`
 	BodyHTML string `json:"bodyHtml" bson:"bodyHtml"` // HTML del cuerpo del correo

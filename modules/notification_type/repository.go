@@ -2,6 +2,7 @@ package notificationtype
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"mailgo/lib"
 	"mailgo/lib/db"
 	"mailgo/lib/log"
@@ -63,4 +64,18 @@ func deleteNotificationType(typeId string, ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func findNotificationTypeByEventKey(eventKey string, ctx context.Context) (*NotificationType, error) {
+	var notificationType NotificationType
+
+	// Por el momento solo trae el último registro
+	opts := options.FindOne().SetSort(bson.D{{"createdAt", -1}})
+
+	if err := dbCollection().FindOne(context.TODO(), bson.M{"eventKeys": eventKey}, opts).Decode(&notificationType); err != nil {
+		log.Get(ctx).Error(err)
+		return nil, ErrTypeID
+	}
+
+	return &notificationType, nil
 }

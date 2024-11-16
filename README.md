@@ -95,6 +95,7 @@ BodyHTML: string
 ```
 ID: ObjectId
 TypeId: ObjectId
+UserId: ObjectId
 Recipient: string
 RelatedId: string
 CreatedAt: time.Time

@@ -2,13 +2,11 @@ package notification
 
 import (
 	"context"
-	"mailgo/lib"
-	"mailgo/lib/db"
-	"mailgo/lib/log"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"mailgo/lib"
+	"mailgo/lib/db"
 )
 
 var ErrID = lib.NewValidationError().Add("id", "Invalid")
@@ -25,24 +23,19 @@ func dbCollection() *mongo.Collection {
 	return collection
 }
 
-func findAllNotificationsFromRelatedId(relatedId string, ctx ...interface{}) ([]Notification, error) {
+func getNotificationsByUser(userID string, ctx context.Context) ([]Notification, error) {
 	var notifications []Notification
-	_id, err := primitive.ObjectIDFromHex(relatedId)
+	cursor, err := dbCollection().Find(ctx, bson.M{"userId": userID})
 	if err != nil {
-		log.Get(ctx...).Error(err)
-		return nil, ErrID
-	}
-
-	cursor, err := dbCollection().Find(context.TODO(), bson.M{"_id": _id})
-	if err != nil {
-		log.Get(ctx...).Error(err)
 		return nil, err
 	}
-	defer cursor.Close(context.TODO())
 
-	if err := cursor.All(context.TODO(), &notifications); err != nil {
-		log.Get(ctx...).Error(err)
-		return nil, err
+	for cursor.Next(ctx) {
+		var notification Notification
+		if err := cursor.Decode(&notification); err != nil {
+			return nil, err
+		}
+		notifications = append(notifications, notification)
 	}
 
 	return notifications, nil

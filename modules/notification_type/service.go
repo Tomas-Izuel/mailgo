@@ -21,6 +21,7 @@ func createNotificationTypeService(notificationTypeDto *CreateNotificationTypeDt
 		ID:         id,
 		Name:       notificationTypeDto.Name,
 		TemplateId: notificationTypeDto.TemplateId,
+		EventKeys:  notificationTypeDto.EventKeys,
 	}
 
 	return createdNotificationType, nil
@@ -42,4 +43,14 @@ func deleteNotificationTypeService(typeId string, ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func GetNotificationTypeByEventKeyService(eventKey string,
+	ctx context.Context) (*NotificationType, error) {
+	notificationType, err := findNotificationTypeByEventKey(eventKey, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return notificationType, nil
 }
