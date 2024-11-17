@@ -3,6 +3,7 @@ package notification
 import (
 	"context"
 	"fmt"
+	mailer "mailgo/lib/sender"
 	notificationtype "mailgo/modules/notification_type"
 	"mailgo/modules/template"
 	"mailgo/modules/user"
@@ -55,10 +56,10 @@ func CreateNotificationService(notificationDto *CreateNotificationDto, ctx conte
 		RelatedId:    notificationDto.RelatedId,
 		CreatedAt:    time.Now(),
 		EventDetails: notificationDto.EventDetails,
-		Mail:         template.MailNotificationTemplate{
-			mailSubject,
-			mailBodyHTML,
-			mailBodyText,
+		Mail: template.MailNotificationTemplate{
+			Subject:  mailSubject,
+			BodyHTML: mailBodyHTML,
+			BodyText: mailBodyText,
 		},
 	}
 
@@ -70,7 +71,7 @@ func CreateNotificationService(notificationDto *CreateNotificationDto, ctx conte
 	notification.ID = id
 
 	// Opcional: Disparar el envío del correo
-	err = mailer.SendMail(notification.Mail.Subject, notification.Mail.BodyHTML, notification.Mail.BodyText, recipientEmail)
+	err = mailer.SendEmail(notification.Mail, notification.Recipient)
 	if err != nil {
 		return nil, fmt.Errorf("error sending mail: %w", err)
 	}

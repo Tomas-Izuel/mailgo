@@ -1,13 +1,21 @@
 package notification
 
-import "github.com/gin-gonic/gin"
+import (
+	"mailgo/lib"
 
-func GetAllRelatedNotificationsController(c *gin.Context) {
-	relatedId := c.Param("relatedId")
-	notifications, err := getAllRelatedNotificationsService(relatedId, c)
+	"github.com/gin-gonic/gin"
+)
+
+func GetNotificationsByUserController(c *gin.Context) {
+	userID := c.Param("userId")
+	if userID == "" {
+		restErr := lib.NewRestError(400, "User ID is required")
+		c.JSON(restErr.Status(), restErr)
+	}
+	notifications, err := getNotificationsByUser(userID, c)
 	if err != nil {
-		c.JSON(400, err)
-		return
+		restErr := lib.NewRestError(400, err.Error())
+		c.JSON(restErr.Status(), restErr)
 	}
 
 	c.JSON(200, notifications)
