@@ -12,6 +12,8 @@ type Configuration struct {
 	MongoURL          string `json:"mongoUrl"`
 	SecurityServerURL string `json:"securityServerUrl"`
 	FluentUrl         string `json:"fluentUrl"`
+	MailUser          string `json:"mailUser"`
+	MailPassword      string `json:"mailPassword"`
 }
 
 var config *Configuration
@@ -34,6 +36,8 @@ func load() *Configuration {
 		MongoURL:          "mongodb://localhost:27017",
 		SecurityServerURL: "http://localhost:3000",
 		FluentUrl:         "localhost:24224",
+		MailUser:          "tomasizuel@gmail.com",
+		MailPassword:      "123456",
 	}
 
 	if value := os.Getenv("RABBIT_URL"); len(value) > 0 {
@@ -56,6 +60,14 @@ func load() *Configuration {
 
 	if value := os.Getenv("AUTH_SERVICE_URL"); len(value) > 0 {
 		result.SecurityServerURL = value
+	}
+
+	if value := os.Getenv("MAIL_USER"); len(value) > 0 {
+		result.MailUser = value
+	}
+
+	if value := os.Getenv("MAIL_PASSWORD"); len(value) > 0 {
+		result.MailPassword = value
 	}
 
 	return result

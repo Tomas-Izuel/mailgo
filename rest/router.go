@@ -3,6 +3,7 @@ package rest
 import (
 	"mailgo/modules/notification"
 	notificationtype "mailgo/modules/notification_type"
+	"mailgo/modules/template"
 )
 
 func initRouter() {
@@ -22,4 +23,6 @@ func initRouter() {
 	notificationTypeGroup.DELETE("/:typeId", notificationtype.DeleteNotificationTypeController)
 
 	//Email Templates
+	templateGroup := server.Group("/template")
+	templateGroup.POST("/", template.CreateTemplateController)
 }
