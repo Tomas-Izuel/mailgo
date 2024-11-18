@@ -339,6 +339,7 @@ Mail: {
 {
     "eventKey":  "string",
     "relatedId": "string",
+    "userId":   "string",
     "details": [
       {
         "key": "value"

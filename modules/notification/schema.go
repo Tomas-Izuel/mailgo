@@ -20,7 +20,7 @@ type Notification struct {
 }
 
 type CreateNotificationDto struct {
-	Event        string                 `json:"type" bson:"type"`
+	EventKey     string                 `json:"type" bson:"type"`
 	RelatedId    string                 `json:"relatedId" bson:"relatedId"`
 	UserId       string                 `json:"userId" bson:"userId"`
 	EventDetails map[string]interface{} `json:"eventDetails" bson:"eventDetails"`

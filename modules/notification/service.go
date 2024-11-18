@@ -2,7 +2,6 @@ package notification
 
 import (
 	"context"
-	"fmt"
 	mailer "mailgo/lib/sender"
 	notificationtype "mailgo/modules/notification_type"
 	"mailgo/modules/template"
@@ -20,25 +19,27 @@ func getNotificationsByUserService(userID string,
 	return notifications, nil
 }
 
-func CreateNotificationService(notificationDto *CreateNotificationDto, ctx context.Context) (*Notification, error) {
+func CreateNotificationService(notificationDto *CreateNotificationDto) *Notification {
+	ctx := context.Background()
+
 	// Obtener el tipo de notificación basado en el evento recibido
 	currentType, err := notificationtype.GetNotificationTypeByEventKeyService(
-		notificationDto.Event, ctx)
+		notificationDto.EventKey, ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error fetching notification type: %w", err)
+		return nil
 	}
 
 	// Cargar el template asociado al tipo de notificación
 	templateMail, err := template.FindTemplateByIDService(currentType.
 		TemplateId, ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error fetching template: %w", err)
+		return nil
 	}
 
 	// Obtener detalles del usuario desde el microservicio auth
 	recipientEmail, err := user.GetUserData(notificationDto.UserId, ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error fetching user email: %w", err)
+		return nil
 	}
 
 	// Construir el contenido del mail usando los detalles del evento
@@ -66,15 +67,15 @@ func CreateNotificationService(notificationDto *CreateNotificationDto, ctx conte
 	// Persistir la notificación
 	id, err := createNotification(notification, ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error creating notification: %w", err)
+		return nil
 	}
 	notification.ID = id
 
 	// Opcional: Disparar el envío del correo
 	err = mailer.SendEmail(notification.Mail, notification.Recipient)
 	if err != nil {
-		return nil, fmt.Errorf("error sending mail: %w", err)
+		return nil
 	}
 
-	return notification, nil
+	return notification
 }
