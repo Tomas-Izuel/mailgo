@@ -3,6 +3,7 @@ package mailer
 import (
 	"fmt"
 	gomail "gopkg.in/mail.v2"
+	"mailgo/lib"
 	"mailgo/modules/template"
 )
 
@@ -20,7 +21,8 @@ func SendEmail(mail template.MailNotificationTemplate, recipient string) error {
 	message.AddAlternative("text/plain", mail.BodyText)
 
 	// Set up the SMTP dialer
-	dialer := gomail.NewDialer("live.smtp.mailtrap.io", 587, "", "")
+	dialer := gomail.NewDialer("live.smtp.mailtrap.io", 587,
+		lib.GetEnv().MailUser, lib.GetEnv().MailPassword)
 
 	// Send the email
 	if err := dialer.DialAndSend(message); err != nil {
