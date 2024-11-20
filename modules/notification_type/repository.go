@@ -27,7 +27,17 @@ func dbCollection() *mongo.Collection {
 func getNotificationTypeByID(typeId string, ctx ...interface{}) (*NotificationType, error) {
 	var notificationType NotificationType
 
-	if err := dbCollection().FindOne(context.TODO(), bson.M{"typeId": typeId}).Decode(&notificationType); err != nil {
+	// Convierte typeId a ObjectID
+	objectID, err := primitive.ObjectIDFromHex(typeId)
+	if err != nil {
+		log.Get(ctx...).Error(err)
+		return nil, ErrTypeID
+	}
+
+	log.Get(ctx...).Error(objectID)
+
+	if err := dbCollection().FindOne(context.TODO(),
+		bson.M{"_id": typeId}).Decode(&notificationType); err != nil {
 		log.Get(ctx...).Error(err)
 		return nil, ErrTypeID
 	}

@@ -27,7 +27,7 @@ func Get() *mongo.Database {
 	if client == nil {
 		ConnectDatabase()
 	}
-	return client.Database("stock")
+	return client.Database("notification")
 }
 
 func DisconnectDatabase() {

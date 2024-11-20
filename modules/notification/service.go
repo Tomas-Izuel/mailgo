@@ -19,14 +19,14 @@ func getNotificationsByUserService(userID string,
 	return notifications, nil
 }
 
-func CreateNotificationService(notificationDto *CreateNotificationDto) *Notification {
+func CreateNotificationService(notificationDto *CreateNotificationDto) error {
 	ctx := context.Background()
 
 	// Obtener el tipo de notificación basado en el evento recibido
 	currentType, err := notificationtype.GetNotificationTypeByEventKeyService(
 		notificationDto.EventKey, ctx)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	// Cargar el template asociado al tipo de notificación
@@ -39,7 +39,7 @@ func CreateNotificationService(notificationDto *CreateNotificationDto) *Notifica
 	// Obtener detalles del usuario desde el microservicio auth
 	recipientEmail, err := user.GetUserData(notificationDto.UserId, ctx)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	// Construir el contenido del mail usando los detalles del evento
@@ -67,15 +67,15 @@ func CreateNotificationService(notificationDto *CreateNotificationDto) *Notifica
 	// Persistir la notificación
 	id, err := createNotification(notification, ctx)
 	if err != nil {
-		return nil
+		return err
 	}
 	notification.ID = id
 
 	// Opcional: Disparar el envío del correo
 	err = mailer.SendEmail(notification.Mail, notification.Recipient)
 	if err != nil {
-		return nil
+		return err
 	}
 
-	return notification
+	return nil
 }

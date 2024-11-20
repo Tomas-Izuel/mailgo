@@ -127,14 +127,8 @@ Mail: {
   {
     "id": "string",
     "typeId": "string",
-    "recipient": "string",
-    "relatedId": "string",
     "createdAt": "string",
-    "mail": {
-      "subject": "string",
-      "bodyHTML": "string",
-      "bodyText": "string"
-    }
+    "relatedId": "string"
   }
 ]
 ```
@@ -157,7 +151,6 @@ Mail: {
 {
   "id": "string",
   "typeId": "string",
-  "recipient": "string",
   "relatedId": "string",
   "createdAt": "string",
   "mail": {
@@ -200,7 +193,7 @@ Mail: {
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
 
-*Obtener todas las notificaciones* `GET /notification-type`
+*Obtener todos los tipos notificaciones* `GET /notification-type`
 
 **Headers**
 
@@ -220,29 +213,6 @@ Mail: {
     "notifications": ["string"]
   }
 ]
-```
-
-- **401 UNAUTHORIZED** si el token es inválido
-- **500 INTERNAL SERVER ERROR** si hay un error en el servidor
-
-*Obtener una notificación* `GET /notification-type/{id}`
-
-**Headers**
-
-| Cabecera      | Contenido                         |
-| ------------- | --------------------------------- |
-| Authorization | Bearer xxx (Token en formato JWT) |
-
-**Response**:
-
-- **200 OK**
-```json
-{
-  "id": "string",
-  "name": "string",
-  "templateId": "string",
-  "notifications": ["string"]
-}
 ```
 
 - **401 UNAUTHORIZED** si el token es inválido

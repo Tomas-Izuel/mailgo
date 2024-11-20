@@ -95,7 +95,7 @@ func ConsumeEvent() error {
 			logger.Info("Processing event: %s for user: %s", eventMsg.EventKey,
 				eventMsg.UserId)
 
-			if err := processEvent(eventMsg); err != nil {
+			if err := processEvent(&eventMsg); err != nil {
 				logger.Error("Failed to process event: ", err)
 				msg.Nack(false, false)
 			} else {
@@ -107,7 +107,7 @@ func ConsumeEvent() error {
 	return nil
 }
 
-func processEvent(eventMsg notification.CreateNotificationDto) error {
+func processEvent(eventMsg *notification.CreateNotificationDto) error {
 	if err := notification.CreateNotificationService(eventMsg); err != nil {
 		return err
 	}
