@@ -111,7 +111,7 @@ Mail: {
 
 ### Notificaciones
 
-*Consultar notificaciones* `GET /notification`
+*Consultar notificaciones* `GET /notification/{userId}`
 
 **Headers**
 
@@ -136,7 +136,7 @@ Mail: {
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
 
-*Consultar una notificación* `GET /notification/{id}`
+*Consultar una notificación* `GET /notification/{userId}/{id}`
 
 **Headers**
 
@@ -188,7 +188,7 @@ Mail: {
 
 **Response**:
 
-- **200 OK** si la notificación fue creada con éxito
+- **200 OK** si el tipo de notificación fue creado con éxito
 - **400 BAD REQUEST** si hay errores en la solicitud
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
@@ -218,7 +218,7 @@ Mail: {
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
 
-*Actualizar una notificación* `PUT /notification-type/{id}`
+*Actualizar un tipo de notificación* `PUT /notification-type/{id}`
 
 **Headers**
 
@@ -238,12 +238,12 @@ Mail: {
 
 **Response**:
 
-- **200 OK** si la notificación fue actualizada con éxito
+- **200 OK** si el tipo de notificación fue actualizado con éxito
 - **400 BAD REQUEST** si hay errores en la solicitud
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
 
-*Eliminar una notificación* `DELETE /notification-type/{id}`
+*Eliminar un tipo de notificación* `DELETE /notification-type/{id}`
 
 **Headers**
 
@@ -253,7 +253,7 @@ Mail: {
 
 **Response**:
 
-- **200 OK** si la notificación fue eliminada con éxito
+- **200 OK** si el tipo de notificación fue eliminado con éxito
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
 
