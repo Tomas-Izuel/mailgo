@@ -1,10 +1,18 @@
 package template
 
+import "go.mongodb.org/mongo-driver/v2/bson"
+
 type MailTemplate struct {
+	ID       bson.ObjectID `bson:"_id" json:"id"`
+	Subject  string        `json:"subject" bson:"subject"`
+	BodyHTML string        `json:"bodyHtml" bson:"bodyHtml"` // HTML del cuerpo del correo
+	BodyText string        `json:"bodyText" bson:"bodyText"` // Texto plano del correo
+}
+
+type ResponseMailTemplateDto struct {
 	ID       string `json:"id" bson:"_id"`
 	Subject  string `json:"subject" bson:"subject"`
-	BodyHTML string `json:"bodyHtml" bson:"bodyHtml"` // HTML del cuerpo del correo
-	BodyText string `json:"bodyText" bson:"bodyText"` // Texto plano del correo
+	BodyHTML string `json:"bodyHtml" bson:"bodyHtml"`
 }
 
 type MailNotificationTemplate struct {
@@ -15,5 +23,5 @@ type MailNotificationTemplate struct {
 
 type CreateMailTemplateDto struct {
 	Subject  string `json:"subject" bson:"subject"`
-	BodyHTML string `json:"bodyHtml" bson:"bodyHtml"` // HTML del cuerpo del correo
+	BodyHTML string `json:"bodyHtml" bson:"bodyHtml"`
 }

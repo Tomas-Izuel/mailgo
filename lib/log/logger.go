@@ -31,7 +31,8 @@ func Get(ctx ...interface{}) LogRusEntry {
 	configureFluent(logger)
 
 	logger.SetLevel(logrus.DebugLevel)
-	result := logger.WithField(LOG_FIELD_SERVER, "stockgo").WithField(LOG_FIELD_THREAD, uuid.NewV4().String())
+	result := logger.WithField(LOG_FIELD_SERVER,
+		"mailgo").WithField(LOG_FIELD_THREAD, uuid.NewV4().String())
 	return logRusEntry{entry: result}
 }
 

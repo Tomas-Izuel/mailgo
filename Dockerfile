@@ -2,7 +2,7 @@
 FROM golang:1.22.6-bullseye AS builder
 
 # Set the working directory
-WORKDIR /go/src/stockgo
+WORKDIR /go/src/mailgo
 
 # Copy the Go module files and download dependencies
 COPY go.mod go.sum ./
@@ -34,4 +34,4 @@ USER appuser
 EXPOSE 3000
 
 # Set the default command to execute the binary
-CMD ["stockgo"]
+CMD ["mailgo"]

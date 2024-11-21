@@ -1,23 +1,30 @@
 package notificationtype
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
-func getNotificationTypeByIDService(typeId string, ctx context.Context) (*NotificationType, error) {
-	notificationType, err := getNotificationTypeByID(typeId, ctx)
+func getNotificationTypesService(ctx context.Context) ([]NotificationType,
+	error) {
+	notificationTypes, err := findNotificationTypes(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return notificationType, nil
+	return notificationTypes, nil
 }
 
-func createNotificationTypeService(notificationTypeDto *CreateNotificationTypeDto, ctx context.Context) (*NotificationType, error) {
+func createNotificationTypeService(
+	notificationTypeDto *CreateNotificationTypeDto,
+	ctx context.Context) (*ResponseNotificationTypeDto, error) {
 	id, err := createNotificationType(notificationTypeDto, ctx)
+	fmt.Print(id)
 	if err != nil {
 		return nil, err
 	}
 
-	createdNotificationType := &NotificationType{
+	createdNotificationType := &ResponseNotificationTypeDto{
 		ID:         id,
 		Name:       notificationTypeDto.Name,
 		TemplateId: notificationTypeDto.TemplateId,

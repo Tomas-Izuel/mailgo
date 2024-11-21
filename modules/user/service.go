@@ -2,40 +2,37 @@ package user
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"net/http"
 )
 
 func GetUserData(userId string, ctx context.Context) (*UserResponse, error) {
-	baseURL := fmt.Sprintf("http://localhost:3000/v1/users/%s", userId)
+	//baseURL := fmt.Sprintf("http://localhost:3000/v1/users/%s", userId)
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, baseURL, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating HTTP request: %w", err)
-	}
+	//req, err := http.NewRequestWithContext(ctx, http.MethodGet, baseURL, nil)
+	//if err != nil {
+	//	return nil, fmt.Errorf("error creating HTTP request: %w", err)
+	//}
 
-	req.Header.Set("Content-Type", "application/json")
+	//req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error making HTTP request: %w", err)
-	}
-	defer resp.Body.Close()
+	//resp, err := http.DefaultClient.Do(req)
+	//if err != nil {
+	//	return nil, fmt.Errorf("error making HTTP request: %w", err)
+	//}
+	//defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
+	//if resp.StatusCode != http.StatusOK {
+	//	return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	//}
 
-	var userResponse UserResponse
-	if err := json.NewDecoder(resp.Body).Decode(&userResponse); err != nil {
-		return nil, fmt.Errorf("error decoding response JSON: %w", err)
-	}
+	//var userResponse UserResponse
+	//if err := json.NewDecoder(resp.Body).Decode(&userResponse); err != nil {
+	//	return nil, fmt.Errorf("error decoding response JSON: %w", err)
+	//}
 
 	mockedEmail := UserResponse{
 		ID:    userId,
 		Name:  "Tomas Izuel",
-		Email: "tomasizuel@gmail.com",
+		Email: "tomasizuelbackup@gmail.com",
 	}
 
 	return &mockedEmail, nil

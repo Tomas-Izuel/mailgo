@@ -2,7 +2,7 @@ services:
   prod-auth-go:
     build:
       context: .
-    container_name: stock-auth-go-local
+    container_name: mail-go-local
     ports:
       - "42069:42069"
     image: prod-auth-go-local

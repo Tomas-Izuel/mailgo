@@ -85,7 +85,7 @@ func ConsumeEvent() error {
 
 	go func() {
 		for msg := range messages {
-			var eventMsg notification.CreateNotificationDto
+			var eventMsg notification.EventNotificationDto
 			if err := json.Unmarshal(msg.Body, &eventMsg); err != nil {
 				logger.Error("Failed to parse message: ", err)
 				msg.Nack(false, false)
@@ -107,7 +107,7 @@ func ConsumeEvent() error {
 	return nil
 }
 
-func processEvent(eventMsg *notification.CreateNotificationDto) error {
+func processEvent(eventMsg *notification.EventNotificationDto) error {
 	if err := notification.CreateNotificationService(eventMsg); err != nil {
 		return err
 	}

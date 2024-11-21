@@ -1,5 +1,5 @@
 # Define variables
-BINARY_NAME=stockgo
+BINARY_NAME=mailgo
 BIN_DIR=./bin
 SRC_DIR=./
 

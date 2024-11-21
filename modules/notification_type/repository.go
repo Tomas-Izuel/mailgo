@@ -2,12 +2,12 @@ package notificationtype
 
 import (
 	"context"
+	"errors"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"mailgo/lib"
 	"mailgo/lib/db"
 	"mailgo/lib/log"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
@@ -24,25 +24,21 @@ func dbCollection() *mongo.Collection {
 	return collection
 }
 
-func getNotificationTypeByID(typeId string, ctx ...interface{}) (*NotificationType, error) {
-	var notificationType NotificationType
+func findNotificationTypes(ctx ...interface{}) ([]NotificationType, error) {
+	var notificationTypes []NotificationType
 
-	// Convierte typeId a ObjectID
-	objectID, err := primitive.ObjectIDFromHex(typeId)
+	cursor, err := dbCollection().Find(context.TODO(), bson.D{})
 	if err != nil {
 		log.Get(ctx...).Error(err)
-		return nil, ErrTypeID
+		return nil, err
 	}
 
-	log.Get(ctx...).Error(objectID)
-
-	if err := dbCollection().FindOne(context.TODO(),
-		bson.M{"_id": typeId}).Decode(&notificationType); err != nil {
+	if err = cursor.All(context.TODO(), &notificationTypes); err != nil {
 		log.Get(ctx...).Error(err)
-		return nil, ErrTypeID
+		return nil, err
 	}
 
-	return &notificationType, nil
+	return notificationTypes, nil
 }
 
 func createNotificationType(notificationTypeDto *CreateNotificationTypeDto, ctx context.Context) (string, error) {
@@ -55,7 +51,7 @@ func createNotificationType(notificationTypeDto *CreateNotificationTypeDto, ctx 
 		return oid.Hex(), nil
 	}
 
-	return result.InsertedID.(primitive.ObjectID).Hex(), ErrTypeID
+	return "", ErrTypeID
 }
 
 func updateNotificationType(notificationType *NotificationType, ctx context.Context) error {
@@ -83,8 +79,12 @@ func findNotificationTypeByEventKey(eventKey string, ctx context.Context) (*Noti
 	opts := options.FindOne().SetSort(bson.D{{"createdAt", -1}})
 
 	if err := dbCollection().FindOne(context.TODO(), bson.M{"eventKeys": eventKey}, opts).Decode(&notificationType); err != nil {
-		log.Get(ctx).Error(err)
-		return nil, ErrTypeID
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			log.Get(ctx).Error("No notification type found for event key: ", eventKey)
+			return nil, ErrTypeID
+		}
+		log.Get(ctx).Error("Database error: ", err)
+		return nil, err
 	}
 
 	return &notificationType, nil

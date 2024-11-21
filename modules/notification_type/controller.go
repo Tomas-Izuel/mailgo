@@ -24,21 +24,15 @@ func CreateNotificationTypeController(c *gin.Context) {
 	c.JSON(200, createdNotificationType)
 }
 
-func GetNotificationTypeByIDController(c *gin.Context) {
-	typeId := c.Param("typeId")
-	if typeId == "" {
-		restErr := lib.NewRestError(400, "Type ID is required")
-		c.JSON(restErr.Status(), restErr)
-		return
-	}
-	notificationType, err := getNotificationTypeByIDService(typeId, c)
+func GetNotificationTypesController(c *gin.Context) {
+	notificationTypes, err := getNotificationTypesService(c)
 	if err != nil {
-		restErr := lib.NewRestError(404, err.Error())
+		restErr := lib.NewRestError(500, err.Error())
 		c.JSON(restErr.Status(), restErr)
 		return
 	}
 
-	c.JSON(200, notificationType)
+	c.JSON(200, notificationTypes)
 }
 
 func UpdateNotificationTypeController(c *gin.Context) {

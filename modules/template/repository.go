@@ -2,7 +2,6 @@ package template
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"mailgo/lib"
 	"mailgo/lib/db"
 	"mailgo/lib/log"
@@ -26,7 +25,16 @@ func dbCollection() *mongo.Collection {
 func findTemplateByID(templateId string, ctx ...interface{}) (*MailTemplate, error) {
 	var mailTemplate MailTemplate
 
-	if err := dbCollection().FindOne(context.TODO(), bson.M{"templateId": templateId}).Decode(&mailTemplate); err != nil {
+	// Convertir el templateId de string a ObjectID
+	objectID, err := bson.ObjectIDFromHex(templateId)
+	if err != nil {
+		log.Get(ctx...).Error("Invalid ObjectID format: ", err)
+		return nil, ErrTemplateID
+	}
+
+	// Buscar template usando ObjectID
+	if err := dbCollection().FindOne(context.TODO(),
+		bson.M{"_id": objectID}).Decode(&mailTemplate); err != nil {
 		log.Get(ctx...).Error(err)
 		return nil, ErrTemplateID
 	}
@@ -45,5 +53,5 @@ func createTemplate(mailTemplate *CreateMailTemplateDto, ctx context.Context) (s
 		return oid.Hex(), nil
 	}
 
-	return result.InsertedID.(primitive.ObjectID).Hex(), ErrTemplateID
+	return result.InsertedID.(bson.ObjectID).Hex(), ErrTemplateID
 }

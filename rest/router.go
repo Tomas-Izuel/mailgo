@@ -18,7 +18,7 @@ func initRouter() {
 	//Notification Types
 	notificationTypeGroup := server.Group("/notification-type")
 	notificationTypeGroup.POST("/", notificationtype.CreateNotificationTypeController)
-	notificationTypeGroup.GET("/:typeId", notificationtype.GetNotificationTypeByIDController)
+	notificationTypeGroup.GET("/", notificationtype.GetNotificationTypesController)
 	notificationTypeGroup.PUT("/:typeId", notificationtype.UpdateNotificationTypeController)
 	notificationTypeGroup.DELETE("/:typeId", notificationtype.DeleteNotificationTypeController)
 
