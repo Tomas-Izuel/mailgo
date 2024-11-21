@@ -18,7 +18,6 @@ func SendEmail(mail template.MailNotificationTemplate, recipient string) error {
 
 	// Set email body
 	message.SetBody("text/html", mail.BodyHTML)
-	message.AddAlternative("text/plain", mail.BodyText)
 
 	user := lib.GetEnv().MailUser
 	password := lib.GetEnv().MailPassword

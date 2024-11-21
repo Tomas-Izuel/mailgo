@@ -24,6 +24,7 @@ func dbCollection() *mongo.Collection {
 
 func getNotificationsByUser(userID string, ctx context.Context) ([]Notification, error) {
 	var notifications []Notification
+
 	cursor, err := dbCollection().Find(ctx, bson.M{"userId": userID})
 	if err != nil {
 		return nil, err
@@ -38,6 +39,21 @@ func getNotificationsByUser(userID string, ctx context.Context) ([]Notification,
 	}
 
 	return notifications, nil
+}
+
+func getNotificationById(id string, ctx context.Context) (*Notification, error) {
+	var notification Notification
+
+	oid, err := bson.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := dbCollection().FindOne(ctx, bson.M{"_id": oid}).Decode(&notification); err != nil {
+		return nil, err
+	}
+
+	return &notification, nil
 }
 
 func createNotification(notification *CreateNotificationDto, ctx context.Context) (string, error) {

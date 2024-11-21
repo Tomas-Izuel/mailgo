@@ -6,7 +6,6 @@ type MailTemplate struct {
 	ID       bson.ObjectID `bson:"_id" json:"id"`
 	Subject  string        `json:"subject" bson:"subject"`
 	BodyHTML string        `json:"bodyHtml" bson:"bodyHtml"` // HTML del cuerpo del correo
-	BodyText string        `json:"bodyText" bson:"bodyText"` // Texto plano del correo
 }
 
 type ResponseMailTemplateDto struct {
@@ -18,7 +17,6 @@ type ResponseMailTemplateDto struct {
 type MailNotificationTemplate struct {
 	Subject  string `json:"subject" bson:"subject"`
 	BodyHTML string `json:"bodyHtml" bson:"bodyHtml"`
-	BodyText string `json:"bodyText" bson:"bodyText"`
 }
 
 type CreateMailTemplateDto struct {

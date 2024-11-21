@@ -32,7 +32,7 @@ func findTemplateByID(templateId string, ctx ...interface{}) (*MailTemplate, err
 		return nil, ErrTemplateID
 	}
 
-	// Buscar template usando ObjectID
+	// Buscar témplate usando ObjectID
 	if err := dbCollection().FindOne(context.TODO(),
 		bson.M{"_id": objectID}).Decode(&mailTemplate); err != nil {
 		log.Get(ctx...).Error(err)

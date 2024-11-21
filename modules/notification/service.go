@@ -2,6 +2,7 @@ package notification
 
 import (
 	"context"
+	"mailgo/lib"
 	"mailgo/lib/log"
 	mailer "mailgo/lib/sender"
 	notificationtype "mailgo/modules/notification_type"
@@ -10,13 +11,49 @@ import (
 	"time"
 )
 
-func getNotificationsByUserService(userID string, ctx context.Context) ([]Notification, error) {
+func getNotificationsByUserService(userID string, ctx context.Context) ([]ResponseNotificationDto,
+	error) {
 	notifications, err := getNotificationsByUser(userID, ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return notifications, nil
+	response := make([]ResponseNotificationDto, 0)
+
+	for _, notification := range notifications {
+		response = append(response, ResponseNotificationDto{
+			ID:        notification.ID,
+			TypeId:    notification.TypeId,
+			RelatedId: notification.RelatedId,
+			CreatedAt: notification.CreatedAt,
+		})
+	}
+
+	return response, nil
+}
+
+func getNotificationByIdService(notificationId string, userId string,
+	ctx context.Context) (*ResponseNotificationDetailDto, error) {
+	notification, err := getNotificationById(notificationId, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Verificar que el usuario tenga permisos para ver la notificación
+	if notification.UserId != userId {
+		err := lib.NewRestError(403, "User does not have permission to view this notification")
+		return nil, err
+	}
+
+	response := &ResponseNotificationDetailDto{
+		ID:        notification.ID,
+		TypeId:    notification.TypeId,
+		RelatedId: notification.RelatedId,
+		CreatedAt: notification.CreatedAt,
+		Mail:      notification.Mail,
+	}
+
+	return response, nil
 }
 
 func CreateNotificationService(notificationDto *EventNotificationDto) error {
@@ -46,7 +83,6 @@ func CreateNotificationService(notificationDto *EventNotificationDto) error {
 	// Construir el contenido del mail usando los detalles del evento
 	mailSubject := templateMail.Subject
 	mailBodyHTML := replacePlaceholders(templateMail.BodyHTML, notificationDto.EventDetails)
-	mailBodyText := replacePlaceholders(templateMail.BodyText, notificationDto.EventDetails)
 
 	// Crear la notificación en la base de datos
 	notification := &CreateNotificationDto{
@@ -59,7 +95,6 @@ func CreateNotificationService(notificationDto *EventNotificationDto) error {
 		Mail: template.MailNotificationTemplate{
 			Subject:  mailSubject,
 			BodyHTML: mailBodyHTML,
-			BodyText: mailBodyText,
 		},
 	}
 
