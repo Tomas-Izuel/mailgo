@@ -13,9 +13,9 @@ func initRouter() {
 
 	//Notifications
 	notificationGroup := server.Group("/notification")
-	notificationGroup.GET("/:userId",
+	notificationGroup.GET("/",
 		notification.GetNotificationsByUserController)
-	notificationGroup.GET("/:userId/:notificationId",
+	notificationGroup.GET("/:notificationId",
 		notification.GetNotificationById)
 
 	//Notification Types

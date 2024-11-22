@@ -44,6 +44,7 @@ type ResponseNotificationDto struct {
 	TypeId    string        `json:"typeId" bson:"typeId"`
 	RelatedId string        `json:"relatedId" bson:"relatedId"`
 	CreatedAt time.Time     `json:"createdAt" bson:"createdAt"`
+	Subject   string        `json:"subject" bson:"subject"`
 }
 
 type ResponseNotificationDetailDto struct {

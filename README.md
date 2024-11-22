@@ -103,7 +103,6 @@ Details: map[string]interface{}
 Mail: {
     Subject: string
     BodyHTML: string
-    BodyText: string
 }
 ```
 
@@ -111,7 +110,7 @@ Mail: {
 
 ### Notificaciones
 
-*Consultar notificaciones* `GET /notification/{userId}`
+*Consultar notificaciones* `GET /notification/`
 
 **Headers**
 
@@ -136,7 +135,7 @@ Mail: {
 - **401 UNAUTHORIZED** si el token es inválido
 - **500 INTERNAL SERVER ERROR** si hay un error en el servidor
 
-*Consultar una notificación* `GET /notification/{userId}/{id}`
+*Consultar una notificación* `GET /notification/{id}`
 
 **Headers**
 
@@ -155,8 +154,7 @@ Mail: {
   "createdAt": "string",
   "mail": {
     "subject": "string",
-    "bodyHTML": "string",
-    "bodyText": "string"
+    "bodyHTML": "string"
   }
 }
 ```

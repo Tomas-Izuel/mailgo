@@ -2,7 +2,6 @@ package notification
 
 import (
 	"context"
-	"mailgo/lib"
 	"mailgo/lib/log"
 	mailer "mailgo/lib/sender"
 	notificationtype "mailgo/modules/notification_type"
@@ -13,6 +12,7 @@ import (
 
 func getNotificationsByUserService(userID string, ctx context.Context) ([]ResponseNotificationDto,
 	error) {
+
 	notifications, err := getNotificationsByUser(userID, ctx)
 	if err != nil {
 		return nil, err
@@ -26,6 +26,7 @@ func getNotificationsByUserService(userID string, ctx context.Context) ([]Respon
 			TypeId:    notification.TypeId,
 			RelatedId: notification.RelatedId,
 			CreatedAt: notification.CreatedAt,
+			Subject:   notification.Mail.Subject,
 		})
 	}
 
@@ -34,14 +35,9 @@ func getNotificationsByUserService(userID string, ctx context.Context) ([]Respon
 
 func getNotificationByIdService(notificationId string, userId string,
 	ctx context.Context) (*ResponseNotificationDetailDto, error) {
+
 	notification, err := getNotificationById(notificationId, ctx)
 	if err != nil {
-		return nil, err
-	}
-
-	// Verificar que el usuario tenga permisos para ver la notificación
-	if notification.UserId != userId {
-		err := lib.NewRestError(403, "User does not have permission to view this notification")
 		return nil, err
 	}
 

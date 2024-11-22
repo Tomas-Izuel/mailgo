@@ -2,17 +2,23 @@ package notification
 
 import (
 	"mailgo/lib"
+	"mailgo/security"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetNotificationsByUserController(c *gin.Context) {
-	userID := c.Param("userId")
-	if userID == "" {
-		restErr := lib.NewRestError(400, "User ID is required")
+	userRec := c.Request.Header.Get("Authorization")
+	userRec = strings.TrimPrefix(userRec, "Bearer ")
+	user, err := security.Validate(userRec)
+
+	if err != nil {
+		restErr := lib.NewRestError(400, err.Error())
 		c.JSON(restErr.Status(), restErr)
 	}
-	notifications, err := getNotificationsByUserService(userID, c)
+
+	notifications, err := getNotificationsByUserService(user.ID, c)
 	if err != nil {
 		restErr := lib.NewRestError(400, err.Error())
 		c.JSON(restErr.Status(), restErr)
@@ -22,13 +28,21 @@ func GetNotificationsByUserController(c *gin.Context) {
 }
 
 func GetNotificationById(c *gin.Context) {
-	userID := c.Param("userId")
+	userRec := c.Request.Header.Get("Authorization")
+	userRec = strings.TrimPrefix(userRec, "Bearer ")
+	user, err := security.Validate(userRec)
+
+	if err != nil {
+		restErr := lib.NewRestError(400, err.Error())
+		c.JSON(restErr.Status(), restErr)
+	}
+
 	notificationID := c.Param("notificationId")
 	if notificationID == "" {
 		restErr := lib.NewRestError(400, "Notification ID is required")
 		c.JSON(restErr.Status(), restErr)
 	}
-	notification, err := getNotificationByIdService(notificationID, userID, c)
+	notification, err := getNotificationByIdService(notificationID, user.ID, c)
 	if err != nil {
 		restErr := lib.NewRestError(400, err.Error())
 		c.JSON(restErr.Status(), restErr)
